@@ -1,11 +1,12 @@
 package com.example.task_1.Services;
 
-import com.example.task_1.Mappers.CourseRowMapper;
 import com.example.task_1.Models.Course;
+import com.example.task_1.Repositries.CourseRepository;
 import com.example.task_1_new_bean.Interfaces.CourseRecommender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,55 +14,40 @@ import java.util.List;
 @Service
 public class CourseService {
 
-    private  CourseRecommender courseRecommender;
+    private final CourseRecommender courseRecommender;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private CourseRowMapper rowMapper;
-
-    // Constructor-based autowiring
-//    public CourseService(@Qualifier("javaCourseRecommender") CourseRecommender courseRecommender) {
-//        this.courseRecommender = courseRecommender;
-//    }
-
-//    public CourseService(@Qualifier("explicitJavaCourseRecommender") CourseRecommender courseRecommender) {
-//        this.courseRecommender = courseRecommender;
-//    }
-
-        public CourseService(@Qualifier("explicitReactCourseRecommender") CourseRecommender courseRecommender) {
+    public CourseService(
+            @Qualifier("explicitReactCourseRecommender") CourseRecommender courseRecommender,
+            CourseRepository courseRepository) {
         this.courseRecommender = courseRecommender;
+        this.courseRepository = courseRepository;
     }
 
-    // Setter-based autowiring
-//    @Autowired
-//    public void setCourseRecommender(CourseRecommender courseRecommender) {
-//        this.courseRecommender = courseRecommender;
-//    }
-
+    // Keep this method as is
     public List<String> getRecommendedCourses() {
         return courseRecommender.recommendedCourses();
     }
 
     public void addCourse(Course c) {
-        String sql = "INSERT INTO course (name, description, credit) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, c.getName(), c.getDescription(), c.getCredit());
+        courseRepository.save(c);
     }
 
     public void updateCourse(Course c) {
-        String sql = "UPDATE course SET name = ?, description = ?, credit = ? WHERE id = ?";
-        jdbcTemplate.update(sql, c.getName(), c.getDescription(), c.getCredit(), c.getId());
+        courseRepository.save(c);
     }
 
     public Course getCourse(int id) {
-        String sql = "SELECT * FROM course WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return courseRepository.findById((long) id)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
     }
 
     public void deleteCourse(int id) {
-        String sql = "DELETE FROM course WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        courseRepository.deleteById((long) id);
     }
 
+    public Page<Course> getAllCoursesPaged(int page, int size) {
+        return courseRepository.findAll(PageRequest.of(page, size));
+    }
 }

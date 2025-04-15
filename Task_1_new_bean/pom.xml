@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>Task_1_new_bean</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <name>Task_1_new_bean</name>
     <description>Task_1_new_bean</description>
     <packaging>jar</packaging>
@@ -31,6 +31,7 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <!-- You can keep the necessary dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -46,6 +47,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -53,8 +62,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip> <!-- Disable repackage to prevent fat-jar creation -->
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

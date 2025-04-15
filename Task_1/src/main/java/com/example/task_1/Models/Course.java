@@ -1,16 +1,26 @@
 package com.example.task_1.Models;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
-@ToString
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
 public class Course {
-    private int id;
+    @Id @GeneratedValue
+    private Long id;
+
     private String name;
     private String description;
     private int credit;
 
+    @ManyToOne
+    private Author author;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Rating> ratings;
+
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
+    private Assessment assessment;
 }
+
