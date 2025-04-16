@@ -1,5 +1,6 @@
 package com.example.task_1.Controllers;
 
+import com.example.task_1.Dtos.CourseCreateDto;
 import com.example.task_1.Dtos.CourseDto;
 import com.example.task_1.Models.Course;
 import com.example.task_1.Mappers.CourseMapper;
@@ -31,8 +32,9 @@ public class CourseController {
 
     @PostMapping
     @Operation(summary = "Add a new course")
-    public ResponseEntity<Void> addCourse(@Valid @RequestBody CourseDto courseDto) {
-        courseService.addCourse(courseMapper.toEntity(courseDto));
+    public ResponseEntity<Void> addCourse(@Valid @RequestBody CourseCreateDto courseDto) {
+        Course course = courseMapper.toEntity(courseDto);
+        courseService.addCourse(course);
         return ResponseEntity.ok().build();
     }
 
@@ -40,7 +42,7 @@ public class CourseController {
     @Operation(summary = "Update a course")
     public ResponseEntity<Void> updateCourse(@PathVariable Integer id, @Valid @RequestBody CourseDto courseDto) {
         courseDto.setId(Long.valueOf(id));
-        courseService.updateCourse(courseMapper.toEntity(courseDto));
+        courseService.updateCourse(courseMapper.toEntityWithId(courseDto));
         return ResponseEntity.ok().build();
     }
 
