@@ -3,7 +3,6 @@ package com.example.task_1.Mappers;
 import com.example.task_1.Dtos.CourseCreateDto;
 import com.example.task_1.Dtos.CourseDto;
 import com.example.task_1.Models.Course;
-import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
