@@ -30,7 +30,7 @@ public class CourseController {
         this.courseMapper = courseMapper;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     @Operation(summary = "Add a new course")
     public ResponseEntity<Void> addCourse(@Valid @RequestBody CourseCreateDto courseDto) {
         Course course = courseMapper.toEntity(courseDto);
@@ -38,7 +38,7 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     @Operation(summary = "Update a course")
     public ResponseEntity<Void> updateCourse(@PathVariable Integer id, @Valid @RequestBody CourseDto courseDto) {
         courseDto.setId(Long.valueOf(id));
@@ -46,7 +46,7 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/view/{id}")
     @Operation(summary = "Get course by ID")
     public ResponseEntity<CourseDto> getCourse(@PathVariable Integer id) {
         Course course = courseService.getCourse(id);
@@ -56,14 +56,14 @@ public class CourseController {
         return ResponseEntity.ok(courseMapper.toDto(course));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete a course by ID")
     public ResponseEntity<Void> deleteCourse(@PathVariable Integer id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/view")
     @Operation(summary = "Get all courses (paginated)")
     public ResponseEntity<List<CourseDto>> getAllCourses(
             @RequestParam(defaultValue = "0") int page,
